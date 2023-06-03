@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductStoreUpdateRequest;
+use App\Models\Product;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista produtos.
      *
      * @return \Illuminate\Http\Response
      */
@@ -18,28 +21,44 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Cria um novo produto.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductStoreUpdateRequest $request)
     {
-        //
+        try {
+            $product = Product::create(
+                [
+                    'name' => $request->name,
+                    'price' => $request->price,
+                    'description' => $request->description,
+                    'category' => $request->category,
+                    'image_url' => $request->image_url
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'data' => [],
+                    'message' => $e->getMessage()
+                ],
+                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return response()->json(
+            [
+                'data' => $product,
+                'message' => 'success'
+            ],
+            JsonResponse::HTTP_OK
+        );
     }
 
     /**
-     * Display the specified resource.
+     * Busca um produto específico.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -50,18 +69,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Atualiza um produto específico.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -73,7 +81,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove um produto.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
