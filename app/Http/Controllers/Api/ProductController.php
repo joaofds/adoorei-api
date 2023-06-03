@@ -111,9 +111,27 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductStoreUpdateRequest $request, $id)
     {
-        //
+        try {
+            $product = Product::find($id)->update($request->all());
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'data' => [],
+                    'message' => $e->getMessage()
+                ],
+                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return response()->json(
+            [
+                'data' => $product,
+                'message' => 'success'
+            ],
+            JsonResponse::HTTP_OK
+        );
     }
 
     /**

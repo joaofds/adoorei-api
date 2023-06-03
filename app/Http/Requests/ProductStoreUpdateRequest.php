@@ -24,12 +24,27 @@ class ProductStoreUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name' => 'required|string|unique:products',
-            'price' => 'required|numeric',
-            'description' => 'required|string',
-            'category' => 'required|string',
-            'image_url' => 'string'
-        ];
+        $rules = null;
+        if (request()->isMethod('post')) {
+            $rules =
+            [
+                'name' => 'required|string|unique:products',
+                'price' => 'required|numeric',
+                'description' => 'required|string',
+                'category' => 'required|string',
+                'image_url' => 'string'
+            ];
+        } elseif (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
+            $rules =
+            [
+                'name' => 'string|unique:products',
+                'price' => 'numeric',
+                'description' => 'string',
+                'category' => 'string',
+                'image_url' => 'string'
+            ];
+        }
+
+        return $rules;
     }
 }
