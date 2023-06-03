@@ -47,15 +47,7 @@ class ProductController extends Controller
     public function store(ProductStoreUpdateRequest $request)
     {
         try {
-            $product = Product::create(
-                [
-                    'name' => $request->name,
-                    'price' => $request->price,
-                    'description' => $request->description,
-                    'category' => $request->category,
-                    'image_url' => $request->image_url
-                ]
-            );
+            $product = Product::create($request->all());
         } catch (\Exception $e) {
             return response()->json(
                 [
@@ -84,12 +76,12 @@ class ProductController extends Controller
     public function show($id)
     {
         try {
-            $product = Product::find($id);
+            $product = Product::findOrfail($id);
         } catch (\Exception $e) {
             return response()->json(
                 [
                     'data' => [],
-                    'message' => $e->getMessage()
+                    'message' => 'Product not found'
                 ],
                 JsonResponse::HTTP_INTERNAL_SERVER_ERROR
             );
