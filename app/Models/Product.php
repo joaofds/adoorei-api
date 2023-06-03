@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -51,5 +52,34 @@ class Product extends Model
 
         $products = $query->get();
         return $products;
+    }
+
+    public static function importProductsFromApi(mixed $products, $massive = true): void
+    {
+        if ($massive) {
+            foreach ($products as $product) {
+                self::create(
+                    [
+                        'name' => $product->title,
+                        'price' => $product->price,
+                        'description' => $product->description,
+                        'category' => $product->category,
+                        'image_url' => $product->image,
+                        'created_at' => Carbon::now()
+                    ]
+                );
+            }
+        } else {
+            self::create(
+                [
+                    'name' => $products->title,
+                    'price' => $products->price,
+                    'description' => $products->description,
+                    'category' => $products->category,
+                    'image_url' => $products->image,
+                    'created_at' => Carbon::now()
+                ]
+            );
+        }
     }
 }
