@@ -14,6 +14,12 @@ Route::get('/', function () {
 
 Route::middleware('api')->group(function () {
     // PRODUTOS
-    Route::apiResource('product', ProductController::class)
-    ->except(['create', 'edit']);
+    Route::controller(ProductController::class)
+    ->prefix('product')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show');
+        Route::post('/', 'store');
+        Route::put('/{id}', 'update');
+        Route::delete('/{id}', 'destroy');
+    });
 });
