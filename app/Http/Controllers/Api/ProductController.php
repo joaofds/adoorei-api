@@ -15,10 +15,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         try {
-            $products = Product::all();
+            $products = Product::getProductsByQuery($request);
         } catch (\Exception $e) {
             return response()->json(
                 [
