@@ -142,6 +142,24 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $product = Product::destroy($id);
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'data' => [],
+                    'message' => $e->getMessage()
+                ],
+                JsonResponse::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+
+        return response()->json(
+            [
+                'data' => $product,
+                'message' => 'success'
+            ],
+            JsonResponse::HTTP_OK
+        );
     }
 }
